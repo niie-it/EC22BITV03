@@ -1,0 +1,45 @@
+﻿@model IEnumerable<MyEStore.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Giỏ hàng</h1>
+
+<div class="cart-table table-responsive">
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="pro-thumbnail">Thumbnail</th>
+				<th class="pro-title">Product</th>
+				<th class="pro-price">Price</th>
+				<th class="pro-quantity">Quantity</th>
+				<th class="pro-subtotal">Total</th>
+				<th class="pro-remove">Remove</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						<img src="~/Hinh/HangHoa/@item.Hinh" alt="@item.TenHh" height="100" />
+					</td>
+					<td>@item.TenHh</td>
+					<td>@item.DonGia</td>
+					<td>
+						<form asp-action="UpdateCart" asp-route-id="@item.MaHh">
+							<input type="number" name="qty" value="@item.SoLuong" min="0" style="width:50px;" />
+							<button class="btn btn-success">UPDATE</button>
+						</form>
+					</td>
+					<td>@item.ThanhTien</td>
+					<td>
+						<a asp-action="RemoveCart" asp-route-id="@item.MaHh" class="btn btn-danger">Xóa</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<h5>Tổng tiền: @Model.Sum(p => p.ThanhTien).ToString("#,#00.00") $</h5>
+</div>

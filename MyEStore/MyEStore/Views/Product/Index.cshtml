@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MyEStore.Models.HangHoaVM>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách Hàng hóa</h1>
+<!--có thể tách riêng phần css để tái sử dụng-->
+<style>
+	.hh-box {
+		width: 280px;
+		height: 350px;
+		box-shadow: 0 0 7px red;
+		display: inline-block;
+		margin: 7px;
+		text-align: center;
+		position: relative;
+	}
+
+	.hh-box-img {
+		width: 80%;
+		height: 80%;
+		margin-top: 10px;
+	}
+
+	.hh-box-name {
+		position: absolute;
+		top: 5px;
+		width: 100%;
+		color: green;
+	}
+
+	.hh-box-price {
+		position: absolute;
+		left: 5px;
+		bottom: 5px;
+		color: blue;
+		font-size: larger;
+	}
+
+	.hh-box-mua {
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+	}
+</style>
+<div class="container">
+	@foreach (var hh in Model)
+	{
+		<div class="hh-box">
+			<a asp-action="Detail" asp-route-id="@hh.MaHh">
+				<h3 class="hh-box-name">@hh.TenHh</h3>
+			</a>
+			<a asp-action="Detail" asp-route-id="@hh.MaHh">
+				<img src="~/Hinh/HangHoa/@hh.Hinh" alt="@hh.TenHh" class="hh-box-img" />
+			</a>
+			<div class="hh-box-price">$ @hh.DonGia</div>
+			<a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@hh.MaHh" class="btn btn-primary hh-box-mua">MUA</a>
+		</div>
+	}
+</div>
