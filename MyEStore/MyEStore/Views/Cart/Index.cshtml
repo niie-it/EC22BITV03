@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MyEStore.Models.CartItem>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Giỏ hàng</h1>
@@ -42,4 +42,48 @@
 		</tbody>
 	</table>
 	<h5>Tổng tiền: @Model.Sum(p => p.ThanhTien).ToString("#,#00.00") $</h5>
+	<!-- Set up a container element for the button -->
+	<div id="paypal-button-container"></div>
 </div>
+<script src="https://www.paypal.com/sdk/js?client-id=ATdERqGEV3Sa5vn-9ml0NHVV7pe6cp2UafsWQtdo4Y_Fpk6ScyjyGBAWMxXVclXDPcSwsZkdVDAoj8ER"></script>
+
+<script>
+	paypal.Buttons({
+		style: {
+			layout: 'horizontal',
+			color: 'silver',
+			tagline: 'false'
+		},
+		async createOrder() {
+			const response = await fetch("/payment/create-paypal-order", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					"value": "@Model.Sum(p => p.ThanhTien)", //Lấy từ giỏ hàng của bạn (client)
+					"currency_code": "USD"
+				})
+			});
+
+			const order = await response.json();
+
+			return order.id;
+		},
+		async onApprove(data) {
+			// Capture the funds from the transaction.
+			const response = await fetch(`/payment/capture-paypal-order?orderId=${data.orderID}`, {
+				method: "POST"
+			});
+
+			const details = await response.json();
+
+			// Show success message to buyer
+				window.location.href = "/payment/PaymentSuccess";
+		},
+		onCancel(data) {
+			// Show a cancel page, or return to cart
+			window.location.assign("/your-cancel-page");
+		}
+	}).render('#paypal-button-container');
+</script>
