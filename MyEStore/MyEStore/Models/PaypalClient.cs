@@ -301,15 +301,10 @@ namespace MyEStore.Models
 
 
 	public class Capture
-
 	{
-
 		public string id { get; set; }
-
 		public string status { get; set; }
-
 		public Amount amount { get; set; }
-
 		public SellerProtection seller_protection { get; set; }
 
 		public bool final_capture { get; set; }
